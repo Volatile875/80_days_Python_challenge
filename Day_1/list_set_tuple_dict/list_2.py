@@ -1,4 +1,5 @@
 #while loops with lists 
+#traversing in liat using while loop;
 mohit = ["APP","chocolate","icecream","mango","banana"]
 i=0
 while i<len(mohit):
@@ -6,4 +7,19 @@ while i<len(mohit):
     i+=1
 
 
-print(mohit)
+#list methods:
+#adding the elements in list to another list with using append method;
+'''thislist = ["apple","banana","cherry"]
+[print(x) for x in thislist]
+
+
+yash=[]
+for x in thislist:
+    if "a" in x:
+         yash.append(x)
+
+print(yash)'''
+
+#
+
+
