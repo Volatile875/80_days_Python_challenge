@@ -1,10 +1,10 @@
 #while loops with lists 
 #traversing in liat using while loop;
-mohit = ["APP","chocolate","icecream","mango","banana"]
+'''mohit = ["APP","chocolate","icecream","mango","banana"]
 i=0
 while i<len(mohit):
     print(mohit[i])
-    i+=1
+    i+=1'''
 
 
 #list methods:
@@ -20,6 +20,20 @@ for x in thislist:
 
 print(yash)'''
 
-#
+#list comprehension: and same above code 
+fruits=["apple","banana","cherry"]
+newlist=[x for x in fruits if "a" in x]
+print(newlist)
 
 
+print("--------------------------------------")
+
+
+newlist=[x for x in range(10)]
+print(newlist)
+
+
+newlist.sort()
+print(newlist)
+newlist.sort(reverse=True)
+print(newlist)
