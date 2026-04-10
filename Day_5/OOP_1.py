@@ -52,6 +52,7 @@ print(p1.age)
 '''Note: The self parameter must be the first parameter of any method in the class.'''
 # without self, python would not know which object properties you want to access.  you can use self with putting different name.
 
+<<<<<<< HEAD
 # class leng:
 #     def __init__(obj,name,age):
 #         obj.name=name
@@ -65,6 +66,21 @@ print(p1.age)
 
 
 # print("--------------------------------------------------")
+=======
+class leng:
+    def __init__(myobject,name,age):
+        myobject.name=name
+        myobject.age=age
+
+    def greet(myobject):
+        print("hello, my name is " + myobject.name)
+
+p1=leng("emil",36)
+p1.greet()
+
+
+print("--------------------------------------------------")
+>>>>>>> origin/main
 
 
 class Person:
@@ -101,6 +117,7 @@ print("------------------------------------------------")
 # Properties defined outside method belong to the class itself and shared by all objects: (class Properties).
 # EXAMPLE OF INSTNCE VE CLASS PROPERTIES:
 
+<<<<<<< HEAD
 
 class Wrestler:
     species = "Human"
@@ -119,6 +136,22 @@ print(p1.city)
 
 
 print("---------------------------------------------------")
+=======
+class Wrestler:
+    species = "Human"
+
+    def __init__(self, name):
+        self.name = name
+
+
+p1 = Wrestler("RKO")
+
+Wrestler.player = "Randy Orton"
+Wrestler.city = "California"
+
+print(p1.name)
+
+>>>>>>> origin/main
 class people:
     def __init__(self, bablade, owner):
         self.bablade=bablade
