@@ -1,0 +1,1 @@
+#Encapsulation : it is about protecting data inside a class.
