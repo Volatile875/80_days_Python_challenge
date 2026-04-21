@@ -19,7 +19,7 @@ class User(BaseModel):
     tags: List[str] = []
 
     model_config = ConfigDict(
-        json_encoders={datetime: lambda v: v.strftime('%d-%m-%Y-%H:%M:$S')}
+        json_encoders={datetime: lambda v: v.strftime('%d-%m-%Y-%H:%M:%S')}
     )
 
 user = User(
@@ -43,4 +43,6 @@ print(python_dict)
 
 
 
-
+json_str = user.model_dump_json()
+print("="*30)
+print(json_str)
