@@ -1,13 +1,40 @@
-# Python
+# ✅ Python cache files
 __pycache__/
 *.pyc
+*.pyo
+*.pyd
 
-# Virtual environment
+# ✅ Virtual Environment (your env name)
 fastapi_env/
 
-# VS Code
+# ✅ VS Code settings
 .vscode/
 
-# OS
+# ✅ Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# ✅ Environment variables
+.env
+
+# ✅ Logs and temp files
+*.log
+*.tmp
+*.swp
+*.swo
+
+# ✅ OS files
 .DS_Store
 Thumbs.db
+
+# ✅ Build / packaging
+build/
+dist/
+*.egg-info/
+
+# ✅ Coverage / testing
+.coverage
+htmlcov/
+.pytest_cache/
+
+
+.gitignore/
