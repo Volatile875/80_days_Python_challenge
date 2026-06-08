@@ -29,4 +29,5 @@ streamlit
 unstructured
 beautifulsoup4
 lark
+langgraph
 langchain-ollama
