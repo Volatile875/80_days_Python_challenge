@@ -10,7 +10,7 @@ load_dotenv()
 
 
 # Get token
-hf_token = os.getenv("HUGGINGFACEHUB_API_TOKEN")
+hf_[REDACTED] = os.getenv("HUGGINGFACEHUB_API_TOKEN")
 
 # Initialize model
 llm=HuggingFaceEndpoint(
