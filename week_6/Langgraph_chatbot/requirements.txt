@@ -30,3 +30,4 @@ beautifulsoup4
 lark
 langgraph
 langchain-ollama
+langgraph-checkpoint-sqlite
