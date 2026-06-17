@@ -13,6 +13,10 @@ import aiosqlite
 import requests
 import asyncio
 import threading
+import warnings
+
+
+
 
 load_dotenv()
 
@@ -44,7 +48,7 @@ llm = ChatOllama(model="llama3.1:8b")
 # -------------------
 # 2. Tools
 # -------------------
-search_tool = DuckDuckGoSearchRun(region="us-en")
+search_tool = DuckDuckGoSearchRun()
 
 
 @tool
