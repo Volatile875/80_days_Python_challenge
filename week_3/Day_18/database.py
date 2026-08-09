@@ -1,34 +1,106 @@
 import sqlite3
 import os
+from typing import Any
 from unittest import result
-
-connection = sqlite3.connect("sqlite3.db")
-
-cursor = connection.cursor()
+from schemas import ShipmentCreate, ShipmentUpdate
 
 
-def create_table(self, name:str):
+class Database:
+        def __init__(self):
+                #making the connnection wiht database
+                self.conn = sqlite3.connect("sqlite.db")
+                # Get cursor to execute queries and fetch data
+                self.cur = self.conn.cursor()
+                #Create the table if not exists
+                self.create_table("shipment")
 
 
-# 1. Creat a table with columns
+        def create_table(self, name:str):
+        # 1. Creat a table with columns
                 self.cur.execute("""
-                        CREATE TABLE IF NOT EXISTS ?
-                                (id INTEGER PRIMARY KEY,
+                        CREATE TABLE IF NOT EXISTS shipment (
+                                id INTEGER PRIMARY KEY,
                                 content TEXT,
                                 weight REAL,
                                 destination TEXT,
-                                status TEXT)
-                        """)
+                                status TEXT
+                        )
+                """, (name,))
+        def create(self, shipment: ShipmentCreate) -> int:
+                #Find a new ID
+                self.cur.execute("SELECT MAX(id) FROM shipment")
+                result = self.cur.fetchone()
 
+                if result[0] is None:
+                        new_id = 1
+                else:
+                        new_id = result[0] + 1
+
+                        # Insert values in the table 
+                self.cur.execute("""
+                        INSERT INTO shipment
+                        VALUES (:id, :content, :weight,:destination , :status) 
+                        """,
+                        {
+                                "id": new_id,
+                                **shipment.model_dump(),
+                                "status": "placed",
+                        }       
+                )
+                self.conn.commit()
+
+                return new_id
+
+
+        def get(self, id: int) -> dict[str, Any] | None:
+                self.cur.execute("""
+                        SELECT * FROM shipment
+                        WHERE id = ?
+                        """, (id, ))
+                row = self.cur.fetchone()
+                return {
+                        "id": row[0],
+                        "content": row[1],
+                        "weight": row[2],
+                        "destination": row[3],
+                        "status": row[4]
+                }
+
+        def update(self,id: int, shipment: ShipmentUpdate) -> dict[str, Any] | None:
+                # Update the shipment with given id
+                self.cur.execute("""
+                        UPDATE shipment SET status = :status
+                        WHERE id = :id
+                """, 
+                        {
+                                "id": shipment_id,
+                                **shipment.model_dump()
+                        }
+                )
+                self.conn.commit()
+
+                return self.get(shipment_id)
+
+        def delete(self, id:int):
+                self.cur.execute("""
+                        DELETE FROM shipment
+                        WHERE id = ?
+                        """, (id,))
+                self.conn.commit()
+
+        def close(self):
+              self.conn.close()
+                
+               
 
 #DELETINg the whole database:----------------------------
-# cursor.execute("DROP TABLE shipment")
-# connection.commit()
+# self.cur.execute("DROP TABLE shipment")
+# self.conn.commit()
 
 
 #2. Add the shipment data :-
 # insert values in the table
-# cursor.execute("""
+# self.cur.execute("""
 #     INSERT INTO shipment VALUES
 #     (12701, 'metal gears', 12, 'New York', 'placed'),
 #     (12702, 'plam trees', 20, 'California', 'placed'),
@@ -57,7 +129,8 @@ def create_table(self, name:str):
 #                """)
 # result= cursor.fetchone()
 # print(result)
-# abc=cursor.execute("""
+# abc=cursor.execute("":
+# "
 #                 SELECT id,status FROM shipment
 #                WHERE content = 'plam trees'
 #                """)
@@ -92,11 +165,11 @@ def create_table(self, name:str):
 
 # connection.commit()
 
-#6. Delete ashipment by it's ID:
-cursor.execute("""
-DELETE FROM shipment
-                WHERE id = 12704 """)
+# #6. Delete ashipment by it's ID:
+# cursor.execute("""
+# DELETE FROM shipment
+#                 WHERE id = 12704 """)
 
-connection.commit()
-# Finally, to cloas the connection when done:
-connection.close()
+# connection.commit()
+# # Finally, to cloas the connection when done:
+# connection.close()

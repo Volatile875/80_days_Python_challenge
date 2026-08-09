@@ -1,8 +1,11 @@
 from typing import Any
-from schemas import ShipmentUpdate, ShipmentCreate, ShipmentRead
+from .schemas import ShipmentUpdate, ShipmentCreate, ShipmentStatus
 from fastapi import FastAPI, HTTPException, status
+from .database import Database
 
 app = FastAPI()
+
+db = Database()
     
 ### Shipments datastore as dict
 shipments = {
@@ -15,41 +18,36 @@ shipments = {
 
 
 ### Read a shipment by id
-@app.get("/shipment", response_model= ShipmentRead)
-def get_shipment(id: int) -> dict[str, Any]:
+@app.get("/shipment", response_model= ShipmentStatus)
+def get_shipment(id:int):
     # Check for shipment with given id
-    if id not in shipments:
+    shipment = db.get(id)
+
+    if shipment is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Given id doesn't exist!",
         )
 
-    return shipments[id]
+    return shipment
 
 
 ### Create a new shipment with content and weight
-@app.post("/shipment")
-def submit_shipment(shipment: Shipment) -> dict[str, int]:
-    
+@app.post("/shipment", response_model = None)
+
+def submit_shipment(shipment: ShipmentCreate) -> dict[str, int]:
     # Create and assign shipment a new id
-    new_id = max(shipments.keys()) + 1
-    # Add to shipments dict
-    shipments[new_id] = {
-        "content": shipment.content,
-        "weight": shipment.weight,
-        "destination": shipment.destination,
-        "status": "placed",
-    }
+    new_id = db.create(shipment)
     # Return id for later use
     return {"id": new_id}
 
 
 ### Update fields of a shipment
-@app.patch("/shipment")
-def update_shipment(id: int, body: ShipmentUpdate):
+@app.patch("/shipment", response_model = ShipmentStatus)
+def update_shipment(self, id: int, shipment: ShipmentUpdate):
     # Update data with given fields
-    shipments[id].update(body.model_dump(exclude_none=True))
-    return shipments[id]
+    shipment = db.update(id, shipment)
+    return shipment
 
 
 ### Delete a shipment by id
