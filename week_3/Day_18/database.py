@@ -8,14 +8,14 @@ from schemas import ShipmentCreate, ShipmentUpdate
 class Database:
         def __init__(self):
                 #making the connnection wiht database
-                self.conn = sqlite3.connect("sqlite.db")
+                self.conn = sqlite3.connect("sqlite.db", check_same_thread=False)
                 # Get cursor to execute queries and fetch data
                 self.cur = self.conn.cursor()
                 #Create the table if not exists
-                self.create_table("shipment")
+                self.create_table()
 
 
-        def create_table(self, name:str):
+        def create_table(self):
         # 1. Creat a table with columns
                 self.cur.execute("""
                         CREATE TABLE IF NOT EXISTS shipment (
@@ -25,7 +25,7 @@ class Database:
                                 destination TEXT,
                                 status TEXT
                         )
-                """, (name,))
+                """)
         def create(self, shipment: ShipmentCreate) -> int:
                 #Find a new ID
                 self.cur.execute("SELECT MAX(id) FROM shipment")
@@ -58,6 +58,10 @@ class Database:
                         WHERE id = ?
                         """, (id, ))
                 row = self.cur.fetchone()
+
+                if row is None:
+                        return None
+                
                 return {
                         "id": row[0],
                         "content": row[1],
