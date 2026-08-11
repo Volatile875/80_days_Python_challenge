@@ -18,13 +18,17 @@ class Shipment(BaseModel):
     destination: str
 
 
-class ShipmentCreate(Shipment):
-    status: ShipmentStatus = ShipmentStatus.placed
-
-
 class ShipmentUpdate(BaseModel):
     content: Optional[str] = None
     weight: Optional[float] = Field(default=None, lt=25)
     destination: Optional[str] = None
     status: Optional[ShipmentStatus] = None
 
+
+class ShipmentCreate(Shipment):
+    status: ShipmentStatus = ShipmentStatus.placed
+
+
+class ShipmentRead(Shipment):
+    id:int
+    status: ShipmentStatus
