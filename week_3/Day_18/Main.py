@@ -1,5 +1,5 @@
 from typing import Any
-from schemas import ShipmentUpdate, ShipmentCreate, ShipmentRead
+from Day_18.schemas import ShipmentUpdate, ShipmentCreate, ShipmentRead
 from fastapi import FastAPI, HTTPException, status
 
 app = FastAPI()
@@ -29,7 +29,7 @@ def get_shipment(id: int) -> dict[str, Any]:
 
 ### Create a new shipment with content and weight
 @app.post("/shipment")
-def submit_shipment(shipment: Shipment) -> dict[str, int]:
+def submit_shipment(shipment: ShipmentCreate) -> dict[str, int]:
     
     # Create and assign shipment a new id
     new_id = max(shipments.keys()) + 1
