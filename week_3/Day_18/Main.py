@@ -1,7 +1,9 @@
-from typing import Any
-from .schemas import ShipmentUpdate, ShipmentCreate, ShipmentStatus
+
+from schemas import ShipmentUpdate, ShipmentCreate, ShipmentStatus
 from fastapi import FastAPI, HTTPException, status
-from .database import Database
+from database import Database
+from typing import Any
+from scalar_fastapi import get_scalar_api_reference
 
 app = FastAPI()
 
@@ -54,7 +56,7 @@ def update_shipment(self, id: int, shipment: ShipmentUpdate):
 @app.delete("/shipment")
 def delete_shipment(id: int) -> dict[str, str]:
     # Remove from datastore
-    shipments.pop(id)
+    db.delete(id)
 
     return {"detail": f"Shipment with id #{id} is deleted!"}
 
@@ -62,4 +64,7 @@ def delete_shipment(id: int) -> dict[str, str]:
 ### Scalar API Documentation
 @app.get("/scalar", include_in_schema=False)
 def get_scalar_docs():
-    return app.openapi()
+    return get_scalar_api_reference(
+        openapi_url=app.openapi_url,
+        title="Scalar API",
+    )
