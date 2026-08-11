@@ -3,21 +3,13 @@ import os
 from typing import Any
 from unittest import result
 from schemas import ShipmentCreate, ShipmentUpdate
+import sqlite3
 
 
 class Database:
         def __init__(self):
                 #making the connnection wiht database
-<<<<<<< HEAD
-                self.conn = sqlite3.connect("sqlite.db")
-                # Get cursor to execute queries and fetch data
-                self.cur = self.conn.cursor()
-                #Create the table if not exists
-                self.create_table("shipment")
-
-
-        def create_table(self, name:str):
-=======
+                
                 self.conn = sqlite3.connect("sqlite.db", check_same_thread=False)
                 # Get cursor to execute queries and fetch data
                 self.cur = self.conn.cursor()
@@ -26,7 +18,7 @@ class Database:
 
 
         def create_table(self):
->>>>>>> 4e2b52c621a3def528d1943cab5ac2cb06a70520
+
         # 1. Creat a table with columns
                 self.cur.execute("""
                         CREATE TABLE IF NOT EXISTS shipment (
@@ -36,11 +28,9 @@ class Database:
                                 destination TEXT,
                                 status TEXT
                         )
-<<<<<<< HEAD
-                """, (name,))
-=======
+
                 """)
->>>>>>> 4e2b52c621a3def528d1943cab5ac2cb06a70520
+
         def create(self, shipment: ShipmentCreate) -> int:
                 #Find a new ID
                 self.cur.execute("SELECT MAX(id) FROM shipment")
@@ -73,13 +63,10 @@ class Database:
                         WHERE id = ?
                         """, (id, ))
                 row = self.cur.fetchone()
-<<<<<<< HEAD
-=======
 
                 if row is None:
                         return None
                 
->>>>>>> 4e2b52c621a3def528d1943cab5ac2cb06a70520
                 return {
                         "id": row[0],
                         "content": row[1],
@@ -89,23 +76,28 @@ class Database:
                 }
 
         def update(self,id: int, shipment: ShipmentUpdate) -> dict[str, Any] | None:
-                # Update the shipment with given id
-                self.cur.execute("""
-                        UPDATE shipment SET status = :status
+                # Only include fields the client actually provided
+                fields = shipment.model_dump(exclude_unset=True)
+
+                if not fields:
+                        # Nothing to update, just return the current row (or None)
+                        return self.get(id)
+
+                # Build the SET clause dynamically from the provided fields
+                set_clause = ", ".join(f"{field} = :{field}" for field in fields)
+
+                self.cur.execute(f"""
+                        UPDATE shipment SET {set_clause}
                         WHERE id = :id
-                """, 
+                """,
                         {
-<<<<<<< HEAD
                                 "id": id,
-=======
-                                "id": shipment_id,
->>>>>>> 4e2b52c621a3def528d1943cab5ac2cb06a70520
-                                **shipment.model_dump()
+                                **fields
                         }
                 )
                 self.conn.commit()
 
-                return self.get(shipment_id)
+                return self.get(id)
 
         def delete(self, id:int):
                 self.cur.execute("""
@@ -124,10 +116,11 @@ class Database:
 # self.conn.commit()
 
 
-#2. Add the shipment data :-
+# 2. Add the shipment data :-
 # insert values in the table
 # self.cur.execute("""
 #     INSERT INTO shipment VALUES
+#     (12700, 'metal gears', 12, 'Delhi', 'placed'),
 #     (12701, 'metal gears', 12, 'New York', 'placed'),
 #     (12702, 'plam trees', 20, 'California', 'placed'),
 #     (12703, 'plastic chairs', 15, 'Texas', 'placed'),
@@ -135,7 +128,7 @@ class Database:
 #     (12705, 'glass bottles', 10, 'Nevada', 'placed')
 #     """)
 
-#commit the changes to the database
+# # commit the changes to the database
 # connection.commit()
 
 
@@ -197,5 +190,5 @@ class Database:
 #                 WHERE id = 12704 """)
 
 # connection.commit()
-# # Finally, to cloas the connection when done:
+# # # Finally, to cloas the connection when done:
 # connection.close()

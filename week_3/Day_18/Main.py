@@ -1,5 +1,5 @@
 
-from schemas import ShipmentUpdate, ShipmentCreate, ShipmentStatus
+from schemas import ShipmentUpdate, ShipmentCreate, ShipmentRead
 from fastapi import FastAPI, HTTPException, status
 from database import Database
 from typing import Any
@@ -20,7 +20,7 @@ shipments = {
 
 
 ### Read a shipment by id
-@app.get("/shipment", response_model= ShipmentStatus)
+@app.get("/shipment", response_model= ShipmentRead)
 def get_shipment(id:int):
     # Check for shipment with given id
     shipment = db.get(id)
@@ -45,11 +45,18 @@ def submit_shipment(shipment: ShipmentCreate) -> dict[str, int]:
 
 
 ### Update fields of a shipment
-@app.patch("/shipment", response_model = ShipmentStatus)
-def update_shipment(self, id: int, shipment: ShipmentUpdate):
+@app.patch("/shipment", response_model = ShipmentRead)
+def update_shipment(id: int, shipment: ShipmentUpdate):
     # Update data with given fields
-    shipment = db.update(id, shipment)
-    return shipment
+    updated_shipment = db.update(id, shipment)
+
+    if updated_shipment is None:
+        raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Given id doesn't exist!",
+        )
+
+    return updated_shipment
 
 
 ### Delete a shipment by id

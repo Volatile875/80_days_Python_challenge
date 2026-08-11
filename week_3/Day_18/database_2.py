@@ -4,49 +4,56 @@
 import sqlite3
 
 # 1. Make connection with database
-connection = sqlite3.connect("sqlite3.db")
+connection = sqlite3.connect("sqlite.db")
 # Get cursor to execute queries and fetch data
 cursor = connection.cursor()
 
 # 2. Create a table with columns
-# cursor.execute("""
-#     CREATE TABLE IF NOT EXISTS shipment (
-#         id INTEGER PRIMARY KEY,
-#         content TEXT,
-#         weight REAL,
-#         status TEXT
-#     )
-# """)
-
-
-# 3. Add shipment data
-# Insert values in the table
-# cursor.execute("""
-#     INSERT INTO shipment
-#     VALUES (12705, 'metal gears', 12, 'placed')
-# """)
-# # Commit the change to the database
-# connection.commit()
-
-
-# 4. Read a shipment by ID
 cursor.execute("""
-    SELECT id, status FROM shipment
-    WHERE content = 'plam trees'
+    CREATE TABLE IF NOT EXISTS shipment (
+        id INTEGER PRIMARY KEY,
+        content TEXT,
+        weight REAL,
+        destination TEXT,
+        status TEXT
+    )
+""") 
+
+
+
+# # 3. Add shipment data
+# # Insert values in the table
+cursor.execute("""
+    INSERT INTO shipment
+    VALUES (12700, 'metal gears', 12,'Delhi','placed'),
+        (12701, 'metal gears', 12, 'New York', 'placed'),
+        (12702, 'plam trees', 20, 'California', 'placed'),
+        (12703, 'plastic chairs', 15, 'Texas', 'placed'),
+        (12704, 'wooden tables', 25, 'Florida', 'placed'),
+        (12706, 'glass bottles', 10, 'Nevada', 'placed')
 """)
-result = cursor.fetchone()
-
-print(result)
-
-
-# 5. Update a shipment
-id = 12702
-status = "in_transit"
-cursor.execute( f"""
-    UPDATE shipment SET status = '{status}'
-    WHERE id = {id}
-""")
+# Commit the change to the database
 connection.commit()
+
+
+# # 4. Read a shipment by ID
+# cursor.execute("""
+#     SELECT id, status FROM shipment
+#     WHERE content = 'plam trees'
+# """)
+# result = cursor.fetchone()
+
+# print(result)
+
+
+# # 5. Update a shipment
+# id = 12702
+# status = "in_transit"
+# cursor.execute( f"""
+#     UPDATE shipment SET status = '{status}'
+#     WHERE id = {id}
+# """)
+# connection.commit()
 
 
 # 6. Delete a shipment by id
