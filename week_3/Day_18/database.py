@@ -8,6 +8,7 @@ from schemas import ShipmentCreate, ShipmentUpdate
 class Database:
         def __init__(self):
                 #making the connnection wiht database
+<<<<<<< HEAD
                 self.conn = sqlite3.connect("sqlite.db")
                 # Get cursor to execute queries and fetch data
                 self.cur = self.conn.cursor()
@@ -16,6 +17,16 @@ class Database:
 
 
         def create_table(self, name:str):
+=======
+                self.conn = sqlite3.connect("sqlite.db", check_same_thread=False)
+                # Get cursor to execute queries and fetch data
+                self.cur = self.conn.cursor()
+                #Create the table if not exists
+                self.create_table()
+
+
+        def create_table(self):
+>>>>>>> 4e2b52c621a3def528d1943cab5ac2cb06a70520
         # 1. Creat a table with columns
                 self.cur.execute("""
                         CREATE TABLE IF NOT EXISTS shipment (
@@ -25,7 +36,11 @@ class Database:
                                 destination TEXT,
                                 status TEXT
                         )
+<<<<<<< HEAD
                 """, (name,))
+=======
+                """)
+>>>>>>> 4e2b52c621a3def528d1943cab5ac2cb06a70520
         def create(self, shipment: ShipmentCreate) -> int:
                 #Find a new ID
                 self.cur.execute("SELECT MAX(id) FROM shipment")
@@ -58,6 +73,13 @@ class Database:
                         WHERE id = ?
                         """, (id, ))
                 row = self.cur.fetchone()
+<<<<<<< HEAD
+=======
+
+                if row is None:
+                        return None
+                
+>>>>>>> 4e2b52c621a3def528d1943cab5ac2cb06a70520
                 return {
                         "id": row[0],
                         "content": row[1],
@@ -73,7 +95,11 @@ class Database:
                         WHERE id = :id
                 """, 
                         {
+<<<<<<< HEAD
                                 "id": id,
+=======
+                                "id": shipment_id,
+>>>>>>> 4e2b52c621a3def528d1943cab5ac2cb06a70520
                                 **shipment.model_dump()
                         }
                 )
